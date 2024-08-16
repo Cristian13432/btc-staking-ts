@@ -12,11 +12,12 @@ jobs:
       - node/install:
           node-version: '22.3'
       - run:
-          name: Install requirements
+          name: Install dependencies
           command: npm install
       - run:
           name: Run tests
-          command: npm run test
+          command: npm test
+
   publish_canary:
     machine:
       image: ubuntu-2204:2024.01.1
@@ -25,7 +26,7 @@ jobs:
       - node/install:
           node-version: '22.3'
       - run:
-          name: Install requirements
+          name: Install dependencies
           command: npm install
       - run:
           name: Authenticate with NPM registry
@@ -38,6 +39,7 @@ jobs:
               echo "npm publish failed, stopping the job."
               exit 1
             fi
+
   validate_main_version:
     machine:
       image: ubuntu-2204:2024.01.1
@@ -46,6 +48,7 @@ jobs:
       - run:
           name: Validate version
           command: ./bin/ci_validate_version.sh
+
   publish:
     machine:
       image: ubuntu-2204:2024.01.1
@@ -58,12 +61,14 @@ jobs:
           name: Authenticate with NPM registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
       - run:
-          name: Install requirements
+          name: Install dependencies
           command: npm install
       - run:
           name: Publish package
           command: npm publish
+
 workflows:
+  version: 2
   CI:
     jobs:
       - build_and_test
